@@ -7,5 +7,5 @@ import java.util.List;
 public interface StudentService {
     Integer getEventSize();
     List<Student> getEvents(Integer pageSize, Integer page);
-    Student getEvent(Number id);
+    Student getEvent(Long id);
 }

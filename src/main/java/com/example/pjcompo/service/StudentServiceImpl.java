@@ -23,7 +23,7 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public Student getEvent(Number id) {
+    public Student getEvent(Long id) {
         return studentDao.getEvent(id);
     }
 }
