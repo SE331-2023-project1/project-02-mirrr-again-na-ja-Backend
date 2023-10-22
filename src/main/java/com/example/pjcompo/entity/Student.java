@@ -6,10 +6,10 @@ import lombok.Data;
 @Data
 @Builder
 public class Student {
-    Number id;
+    Long id;
     String name;
     String surname;
     String course;
     String image;
-    Number advisorID;
+    Long advisorID;
 }
