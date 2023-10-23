@@ -22,7 +22,16 @@ public class AdvisorDaoDbImpl implements AdvisorDao{
 
     @Override
     public Page<Advisor> getAdvisors(Integer pageSize, Integer page) {
-        return advisorRepository.findAll(PageRequest.of(page - 1, pageSize));
+
+        long totalEvents = advisorRepository.count();
+        // If pageSize is null, set it to the total number of events.
+        pageSize = pageSize == null ? (int) totalEvents : pageSize;
+
+        // If page is null, default to fetching the first page.
+        page = page == null ? 0 : page - 1; // Convert to 0-based for Spring's PageRequest.
+
+        // Use the PageRequest object to fetch the desired page of events from the database.
+        return advisorRepository.findAll(PageRequest.of(page, pageSize));
     }
 
     @Override

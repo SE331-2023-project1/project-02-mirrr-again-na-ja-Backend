@@ -22,7 +22,16 @@ public class StudentDaoDbImpl implements StudentDao{
 
     @Override
     public Page<Student> getEvents(Integer pageSize, Integer page) {
-        return studentRepository.findAll(PageRequest.of(page - 1, pageSize));
+
+        long totalEvents = studentRepository.count();
+        // If pageSize is null, set it to the total number of events.
+        pageSize = pageSize == null ? (int) totalEvents : pageSize;
+
+        // If page is null, default to fetching the first page.
+        page = page == null ? 0 : page - 1; // Convert to 0-based for Spring's PageRequest.
+
+        // Use the PageRequest object to fetch the desired page of events from the database.
+        return studentRepository.findAll(PageRequest.of(page, pageSize));
     }
 
     @Override
