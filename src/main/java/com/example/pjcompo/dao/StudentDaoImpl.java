@@ -2,12 +2,17 @@ package com.example.pjcompo.dao;
 
 import com.example.pjcompo.entity.Student;
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Profile("manual")
 public class StudentDaoImpl implements StudentDao{
     List<Student> studentList;
 
@@ -182,16 +187,25 @@ public class StudentDaoImpl implements StudentDao{
     }
 
     @Override
-    public List<Student> getEvents(Integer pageSize, Integer page) {
+    public Page<Student> getEvents(Integer pageSize, Integer page) {
         pageSize = pageSize == null ? studentList.size() : pageSize;
         page = page == null ? 1 : page;
         int firstIndex = (page - 1) * pageSize;
-        return  studentList.subList(firstIndex, firstIndex + pageSize);
+        return new
+                PageImpl<Student>(studentList.subList(firstIndex,firstIndex+pageSize), PageRequest.of(page,
+                pageSize),studentList.size());
     }
 
     @Override
     public Student getEvent(Long id) {
         return studentList.stream().filter(student ->
                 student.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    @Override
+    public Student save(Student student){
+        student.setId(studentList.get(studentList.size()-1).getId()+1);
+        studentList.add(student);
+        return student;
     }
 }
