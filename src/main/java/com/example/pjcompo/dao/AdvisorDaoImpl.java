@@ -2,12 +2,17 @@ package com.example.pjcompo.dao;
 
 import com.example.pjcompo.entity.Advisor;
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Profile("manual")
 public class AdvisorDaoImpl implements AdvisorDao{
     List<Advisor> advisorList;
 
@@ -46,16 +51,24 @@ public class AdvisorDaoImpl implements AdvisorDao{
     }
 
     @Override
-    public List<Advisor> getAdvisors(Integer pageSize, Integer page) {
+    public Page<Advisor> getAdvisors(Integer pageSize, Integer page) {
       pageSize = pageSize == null ? advisorList.size() : pageSize;
       page = page == null ? 1 : page;
       int firstIndex = (page - 1) * pageSize;
-      return advisorList.subList(firstIndex,firstIndex+pageSize);
+      return new
+              PageImpl<Advisor>(advisorList.subList(firstIndex,firstIndex+pageSize), PageRequest.of(page,pageSize),advisorList.size());
     }
 
     @Override
     public Advisor  getAdvisor(Long id) {
         return advisorList.stream().filter(advisor ->
                 advisor.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    @Override
+    public Advisor save(Advisor advisor) {
+        advisor.setId(advisorList.get(advisorList.size()-1).getId()+1);
+        advisorList.add(advisor);
+        return advisor;
     }
 }
