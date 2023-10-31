@@ -1,9 +1,6 @@
 package com.example.pjcompo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Data
@@ -21,4 +18,7 @@ public class Student {
     String course;
     String image;
     Long advisorID;
+
+    @ManyToOne
+    Advisor advisor;
 }

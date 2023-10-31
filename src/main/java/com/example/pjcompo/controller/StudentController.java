@@ -2,6 +2,7 @@ package com.example.pjcompo.controller;
 
 import com.example.pjcompo.entity.Student;
 import com.example.pjcompo.service.StudentService;
+import com.example.pjcompo.util.LabMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -27,14 +28,14 @@ public class StudentController {
         responseHeader.set("x-total-count",
                 String.valueOf(pageOutput.getTotalElements()));
         return new
-                ResponseEntity<>(pageOutput.getContent(),responseHeader,HttpStatus.OK);
+                ResponseEntity<>(LabMapper.INSTANCE.getStudentDto(pageOutput.getContent()),responseHeader,HttpStatus.OK);
     }
 
     @GetMapping("student/{id}")
     public ResponseEntity<?> getEvent(@PathVariable("id") Long id){
         Student output = studentService.getEvent(id);
         if (output != null) {
-            return ResponseEntity.ok(output);
+            return ResponseEntity.ok(LabMapper.INSTANCE.getStudentDto(output));
         }
         else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The given id is not found");
@@ -44,6 +45,6 @@ public class StudentController {
     @PostMapping("/student")
     public ResponseEntity<?> addStudent(@RequestBody Student student) {
         Student output = studentService.save(student);
-        return ResponseEntity.ok(output);
+        return ResponseEntity.ok(LabMapper.INSTANCE.getStudentDto(output));
     }
 }
